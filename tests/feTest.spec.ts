@@ -1,10 +1,20 @@
-import {test} from '@playwright/test'
-import {LoginPage} from '../src/pom/feClass'
+import { test } from '@playwright/test'
+import { LoginPage } from '../src/pom/loginClass'
+import dotenv from 'dotenv'
+import { testConfig, testSecrets } from '../src/types/globalTypes'
 
-const url= "https://www.google.com"
+dotenv.config({ override: true })
 
-test("Sample Frontend", async({page}) => {
-    const loginPage = new LoginPage(page, test)
+const env = process.env.ENV || 'dev'
+const testConfig: testConfig = require(`../data/envs/config_${env}.json`)
 
-    await loginPage.openHomePage(url)
+const testSecrets: testSecrets = {
+    username: process.env.UNAME,
+    password: process.env.PWORD
+}
+
+test("Sample Frontend", async({ page }) => {
+    const loginPage = new LoginPage(page, test, testConfig, testSecrets)
+
+    await loginPage.openHomepage()
 })
